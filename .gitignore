@@ -1,0 +1,19 @@
+# ASP.NET — never commit configuration (secrets, passwords, connection strings)
+appsettings.json
+appsettings.*.json
+**/secrets.json
+
+# User secrets / env
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+[Ll]og/
+[Ll]ogs/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
