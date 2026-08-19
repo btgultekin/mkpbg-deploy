@@ -7,11 +7,10 @@ appsettings.*.json
 .env
 .env.*
 
-# Logs
+# Logs — keep the folder so ANCM can write stdout/ancm files
 *.log
-logs/
-[Ll]og/
-[Ll]ogs/
+logs/*
+!logs/.gitkeep
 
 # OS
 Thumbs.db
