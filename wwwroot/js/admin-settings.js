@@ -86,6 +86,31 @@
 
   mediaTypeRadios.forEach((radio) => radio.addEventListener("change", syncMediaType));
 
+  const form = document.getElementById("settings-form");
+  form?.addEventListener("submit", (event) => {
+    const selected = document.querySelector('input[name="CheckoutPanelMediaType"]:checked');
+    const isVideo = (selected?.value || "Image") === "Video";
+    const checks = [
+      { input: document.querySelector('input[name="LogoFile"]'), max: 2 * 1024 * 1024, label: "Logo en fazla 2 MB olabilir." },
+      { input: document.querySelector('input[name="FaviconFile"]'), max: 512 * 1024, label: "Favicon en fazla 512 KB olabilir." },
+      {
+        input: panelFile,
+        max: isVideo ? 40 * 1024 * 1024 : 5 * 1024 * 1024,
+        label: isVideo ? "Video en fazla 40 MB olabilir." : "Panel görseli en fazla 5 MB olabilir."
+      }
+    ];
+
+    for (const check of checks) {
+      const file = check.input?.files?.[0];
+      if (file && file.size > check.max) {
+        event.preventDefault();
+        window.alert(check.label);
+        activateTab("checkout");
+        return;
+      }
+    }
+  });
+
   syncProvider();
   syncMode();
   syncMediaType();

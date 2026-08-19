@@ -12,6 +12,11 @@ appsettings.*.json
 logs/*
 !logs/.gitkeep
 
+# Uploaded branding (survives git pull if the folder stays writable)
+uploads/branding/*
+!uploads/branding/.gitkeep
+App_Data/
+
 # OS
 Thumbs.db
 Desktop.ini
