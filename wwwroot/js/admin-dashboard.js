@@ -7,6 +7,7 @@
   const grid = "#e2e8f0";
   const muted = "#64748b";
   const emerald = "#059669";
+  const amber = "#d97706";
   const rose = "#e11d48";
 
   const trendCanvas = document.getElementById("trend-chart");
@@ -64,16 +65,17 @@
   });
 
   const success = data.daily?.success || 0;
+  const refunded = data.daily?.refunded || 0;
   const failed = data.daily?.failed || 0;
-  const hasDaily = success + failed > 0;
+  const hasDaily = success + refunded + failed > 0;
 
   new Chart(successCanvas, {
     type: "doughnut",
     data: {
-      labels: hasDaily ? ["Başarılı", "Başarısız / iptal"] : ["Veri yok"],
+      labels: hasDaily ? ["Başarılı", "İade", "Başarısız / iptal"] : ["Veri yok"],
       datasets: [{
-        data: hasDaily ? [success, failed] : [1],
-        backgroundColor: hasDaily ? [emerald, rose] : ["#e2e8f0"],
+        data: hasDaily ? [success, refunded, failed] : [1],
+        backgroundColor: hasDaily ? [emerald, amber, rose] : ["#e2e8f0"],
         borderWidth: 0
       }]
     },

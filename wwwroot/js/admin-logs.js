@@ -88,7 +88,7 @@
 
       btn.disabled = true;
       try {
-        const res = await fetch(`/admin/logs/${id}`, {
+        const res = await fetch(`${window.__adminBase || "/admin"}/logs/${id}`, {
           headers: { Accept: "application/json" }
         });
         if (!res.ok) throw new Error("Log okunamadı");

@@ -86,8 +86,41 @@
 
   mediaTypeRadios.forEach((radio) => radio.addEventListener("change", syncMediaType));
 
+  const adminPathPrefix = document.getElementById("admin-path-prefix");
+  const adminPathPattern = /^[a-z][a-z0-9-]*$/;
+
+  const validateAdminPathPrefix = () => {
+    if (!adminPathPrefix) return true;
+    const value = (adminPathPrefix.value || "").trim();
+    if (value.length < 2 || value.length > 32) {
+      window.alert("Panel yolu 2 ile 32 karakter arasında olmalıdır.");
+      return false;
+    }
+    if (value !== value.toLowerCase() || /[^a-z0-9-]/.test(value)) {
+      window.alert("Panel yolu yalnızca küçük İngilizce harf, rakam ve tire içerebilir; Türkçe karakter kullanılamaz.");
+      return false;
+    }
+    if (value.endsWith("-") || value.includes("--") || !adminPathPattern.test(value)) {
+      window.alert("Panel yolu harf ile başlamalı, tire ile bitemez ve geçerli bir URL parçası olmalıdır.");
+      return false;
+    }
+    return true;
+  };
+
   const form = document.getElementById("settings-form");
   form?.addEventListener("submit", (event) => {
+    const activeTab = activeTabInput?.value || "pos";
+
+    if (activeTab === "general" && !validateAdminPathPrefix()) {
+      event.preventDefault();
+      activateTab("general");
+      return;
+    }
+
+    if (activeTab !== "checkout") {
+      return;
+    }
+
     const selected = document.querySelector('input[name="CheckoutPanelMediaType"]:checked');
     const isVideo = (selected?.value || "Image") === "Video";
     const checks = [
@@ -109,6 +142,12 @@
         return;
       }
     }
+  });
+
+  adminPathPrefix?.addEventListener("input", () => {
+    adminPathPrefix.value = adminPathPrefix.value
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "");
   });
 
   syncProvider();
