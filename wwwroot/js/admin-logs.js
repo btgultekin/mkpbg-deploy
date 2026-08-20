@@ -81,15 +81,28 @@
     el.textContent = value && String(value).trim() ? String(value) : "—";
   };
 
+  const adminBase = () => {
+    if (window.MokaAdmin?.basePath) {
+      const fromHelper = window.MokaAdmin.basePath();
+      if (fromHelper) return fromHelper;
+    }
+    const fromDom = document.body?.getAttribute("data-admin-base");
+    return fromDom && fromDom.trim() ? fromDom.replace(/\/+$/, "") : "";
+  };
+
   document.querySelectorAll("[data-log-detail]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.getAttribute("data-log-id");
-      if (!id) return;
+      const explicitUrl = btn.getAttribute("data-log-url");
+      const base = adminBase();
+      const url = explicitUrl || (id && base ? `${base}/logs/${id}` : "");
+      if (!url) return;
 
       btn.disabled = true;
       try {
-        const res = await fetch(`${window.__adminBase || "/admin"}/logs/${id}`, {
-          headers: { Accept: "application/json" }
+        const res = await fetch(url, {
+          headers: { Accept: "application/json" },
+          credentials: "same-origin"
         });
         if (!res.ok) throw new Error("Log okunamadı");
         const data = await res.json();
